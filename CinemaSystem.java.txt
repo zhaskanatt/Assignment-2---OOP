@@ -1,0 +1,117 @@
+import java.util.ArrayList;
+import java.util.List;
+
+public class CinemaSystem {
+    private List<User> users;
+    private List<Movie> movies;
+    private List<Ticket> tickets;
+
+    public CinemaSystem() {
+        users = new ArrayList<>();
+        movies = new ArrayList<>();
+        tickets = new ArrayList<>();
+    }
+
+    public void addUser(User user) {
+        users.add(user);
+        System.out.println("User added successfully.");
+    }
+
+    public void addMovie(Movie movie) {
+        movies.add(movie);
+        System.out.println("Movie added successfully.");
+    }
+
+    public void showAllMovies() {
+        if (movies.isEmpty()) {
+            System.out.println("No movies available.");
+            return;
+        }
+        for (Movie movie : movies) {
+            System.out.println(movie);
+        }
+    }
+
+    public void buyTicket(String userName, String movieName, String date, String time, double price) {
+        User user = findUserByName(userName);
+        if (user == null) {
+            System.out.println("User not found.");
+            return;
+        }
+
+        Movie movie = findMovieByName(movieName);
+        if (movie == null) {
+            System.out.println("Movie not found.");
+            return;
+        }
+
+        if (user.getAge() < movie.getAgeRestriction()) {
+            System.out.println("User is not old enough to watch this movie.");
+            return;
+        }
+
+        if (user.getBalance() < price) {
+            System.out.println("Insufficient balance.");
+            return;
+        }
+
+        Ticket ticket = new Ticket(tickets.size() + 1, movieName, date, time, price);
+        tickets.add(ticket);
+        user.buyTicket(ticket);
+        System.out.println("Ticket purchased successfully.");
+    }
+
+    public void cancelTicket(int ticketId) {
+        Ticket ticket = findTicketById(ticketId);
+        if (ticket == null) {
+            System.out.println("Ticket not found.");
+            return;
+        }
+
+        User user = findUserByTicket(ticket);
+        if (user == null) {
+            System.out.println("User not found.");
+            return;
+        }
+
+        user.cancelTicket(ticket);
+        tickets.remove(ticket);
+        System.out.println("Ticket cancelled successfully.");
+    }
+
+    private User findUserByName(String name) {
+        for (User user : users) {
+            if (user.getName().equals(name)) {
+                return user;
+            }
+        }
+        return null;
+    }
+
+    private Movie findMovieByName(String name) {
+        for (Movie movie : movies) {
+            if (movie.getName().equals(name)) {
+                return movie;
+            }
+        }
+        return null;
+    }
+
+    private Ticket findTicketById(int id) {
+        for (Ticket ticket : tickets) {
+            if (ticket.getId() == id) {
+                return ticket;
+            }
+        }
+        return null;
+    }
+
+    private User findUserByTicket(Ticket ticket) {
+        for (User user : users) {
+            if (user.getOrderHistory().contains(ticket)) {
+                return user;
+            }
+        }
+        return null;
+    }
+}

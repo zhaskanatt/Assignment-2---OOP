@@ -1,0 +1,47 @@
+import java.util.ArrayList;
+import java.util.List;
+
+public class User {
+    private String name;
+    private int age;
+    private double balance;
+    private List<Ticket> orderHistory;
+
+    public User(String name, int age, double balance) {
+        this.name = name;
+        this.age = age;
+        this.balance = balance;
+        this.orderHistory = new ArrayList<>();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+
+    public List<Ticket> getOrderHistory() {
+        return orderHistory;
+    }
+
+    public void buyTicket(Ticket ticket) {
+        balance -= ticket.getPrice();
+        orderHistory.add(ticket);
+    }
+
+    public void cancelTicket(Ticket ticket) {
+        balance += ticket.getPrice();
+        orderHistory.remove(ticket);
+    }
+
+    @Override
+    public String toString() {
+        return "User{name='" + name + "', age=" + age + ", balance=" + balance + '}';
+    }
+}
